@@ -75,6 +75,14 @@ function processPostback(event) {
       temp = 1;
       sendMessage(senderId, {text: message});
     });
+  } else if (payload === "PH_CONCERTS") {
+    sendMessage(senderId, {text: "concerts"});
+  } else if (payload === "PH_EXPOS") {
+    sendMessage(senderId, {text: "expos"});
+  } else if (payload === "PH_FESTIVALS") {
+    sendMessage(senderId, {text: "festivals"});
+  } else if (payload === "PH_CONFERENCES") {
+    sendMessage(senderId, {text: "conferences"});
   }
 }
 
@@ -92,10 +100,37 @@ function sendMessage(recipientId, message) {
     if (error) {
       console.log("Error sending message: " + response.error);
     }
+
+    // This is a workaround for the bug defined here: https://developers.facebook.com/bugs/565416400306038
     if (temp === 1) {
       temp = 0;
-      console.log("RES>>>>>>>>>>>>>>>" + response.recipient_id);
-      console.log("BOD>>>>>>>>>>>>>>>" + body.recipient_id);
+      message = {
+        text: "Select the type of event",
+        quick_replies: [
+          {
+            content_type: "text",
+            title: "Concerts",
+            payload: "PH_CONCERTS"
+          },
+          {
+            content_type: "text",
+            title: "Expos",
+            payload: "PH_EXPOS"
+          },
+          {
+            content_type: "text",
+            title: "Festivals",
+            payload: "PH_FESTIVALS"
+          },
+          {
+            content_type: "text",
+            title: "Conferences",
+            payload: "PH_CONFERENCES"
+          }
+        ]
+      };
+
+      sendMessage(body.recipient_id, message);
     }
   });
 }
