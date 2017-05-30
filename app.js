@@ -49,8 +49,8 @@ function processPostback(event) {
   var payload = event.postback.payload;
   console.log("PAYLOAD: >>>>>>>>> " + payload);
 
-  if (payload === "Greeting") {
-    console.log("GREETING");
+  if (payload === "START_BUTTON") {
+    console.log("START_BUTTON");
     // Get user's first name from the User Profile API
     // and include it in the greeting
     request({
@@ -69,7 +69,9 @@ function processPostback(event) {
         name = bodyObj.first_name;
         greeting = "Hi " + name + ". ";
       }
-      var message = greeting + "My name is Weebot. I can tell you what the weather is like for any given location (on Earth, obviously). Where do you want to know the weather of?";
+      var message = greeting + "I hope you are well. " +
+        "I am a bot created to assist you discover various upcoming events in your area. " +
+        "To find out how you can communicate with me, type 'help' or select one of the options below";
       sendMessage(senderId, {text: message});
     });
   }
