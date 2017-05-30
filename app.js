@@ -80,7 +80,6 @@ function processPostback(event) {
 
 // sends message to user
 function sendMessage(recipientId, message) {
-  console.log(">>>>>>>>>>>> recipientId: " + recipientId);
   request({
     url: "https://graph.facebook.com/v2.6/me/messages",
     qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
@@ -95,9 +94,8 @@ function sendMessage(recipientId, message) {
     }
     if (temp === 1) {
       temp = 0;
-      console.log(response);
-      console.log("*************************");
-      console.log(body);
+      console.log("RES>>>>>>>>>>>>>>>" + response.recipient_id);
+      console.log("BOD>>>>>>>>>>>>>>>" + body.recipient_id);
     }
   });
 }
