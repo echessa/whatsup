@@ -2,6 +2,7 @@ var express = require("express");
 var request = require("request");
 var bodyParser = require("body-parser");
 
+var temp = "";
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -47,10 +48,8 @@ app.post("/webhook", function (req, res) {
 function processPostback(event) {
   var senderId = event.sender.id;
   var payload = event.postback.payload;
-  console.log("PAYLOAD: >>>>>>>>> " + payload);
 
   if (payload === "START_BUTTON") {
-    console.log("START_BUTTON");
     // Get user's first name from the User Profile API
     // and include it in the greeting
     request({
@@ -64,6 +63,7 @@ function processPostback(event) {
       var greeting = "";
       if (error) {
         console.log("Error getting user's name: " +  error);
+        greeting = "Hi. ";
       } else {
         var bodyObj = JSON.parse(body);
         name = bodyObj.first_name;
@@ -72,6 +72,7 @@ function processPostback(event) {
       var message = greeting + "I hope you are well. " +
         "I am a bot created to assist you discover various upcoming events in your area. " +
         "To find out how you can communicate with me, type 'help' or select one of the options below";
+      temp = 1;
       sendMessage(senderId, {text: message});
     });
   }
@@ -79,6 +80,7 @@ function processPostback(event) {
 
 // sends message to user
 function sendMessage(recipientId, message) {
+  console.log(">>>>>>>>>>>> recipientId: " + recipientId);
   request({
     url: "https://graph.facebook.com/v2.6/me/messages",
     qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
@@ -90,6 +92,12 @@ function sendMessage(recipientId, message) {
   }, function(error, response, body) {
     if (error) {
       console.log("Error sending message: " + response.error);
+    }
+    if (temp === 1) {
+      temp = 0;
+      console.log(response);
+      console.log("*************************");
+      console.log(body);
     }
   });
 }
